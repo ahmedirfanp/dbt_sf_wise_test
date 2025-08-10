@@ -1,0 +1,6 @@
+sources:
+  - name: wise_funnel
+    database: wise_db
+    schema: wise_schema
+    tables:
+      - name: STG_WISE_FUNNEL_EVENTS
