@@ -1,42 +1,21 @@
-SELECT
-    experience,
-    platform,
-    region,
-    COUNT(*) AS created_transfers,
-    COUNT(CASE WHEN funded_date IS NOT NULL THEN 1 END) AS funded_transfers,
-    COUNT(CASE WHEN transferred_date IS NOT NULL THEN 1 END) AS completed_transfers,
-    
-    ROUND(
-        COUNT(CASE WHEN funded_date IS NOT NULL THEN 1 END) * 100.0 /
-        COUNT(*), 2
-    ) AS created_to_funded_pct,
-    100 - (
-        ROUND(
-        COUNT(CASE WHEN funded_date IS NOT NULL THEN 1 END) * 100.0 /
-        COUNT(*), 2)
-    ) AS created_to_funded_drop_off_pct,
-    ROUND(
-        COUNT(CASE WHEN transferred_date IS NOT NULL THEN 1 END) * 100.0 /
-        NULLIF(COUNT(CASE WHEN funded_date IS NOT NULL THEN 1 END), 0), 2
-    ) AS funded_to_completed_pct,
-    100 - (
-        ROUND(
-        COUNT(CASE WHEN transferred_date IS NOT NULL THEN 1 END) * 100.0 /
-        NULLIF(COUNT(CASE WHEN funded_date IS NOT NULL THEN 1 END), 0), 2
-    )
-    ) as funded_to_completed_drop_off_pct,
-    
-    ROUND(
-        COUNT(CASE WHEN transferred_date IS NOT NULL THEN 1 END) * 100.0 /
-        COUNT(*), 2
-    ) AS created_to_completed_pct,
-    100 - (
-        ROUND(
-        COUNT(CASE WHEN transferred_date IS NOT NULL THEN 1 END) * 100.0 /
-        COUNT(*), 2
-    )
-    ) AS created_to_completed_drop_off_pct
+select
+  experience,
+  platform,
+  region,
 
-FROM {{ ref('wise_funnel_events_metrics') }}
-GROUP BY experience, platform, region
-ORDER BY experience, platform, region
+  count(*) as created_transfers,
+  count_if(funded_date     is not null) as funded_transfers,
+  count_if(transferred_date is not null) as completed_transfers,
+
+  {{ pct_if("funded_date IS NOT NULL") }}                                        as created_to_funded_pct,
+  {{ dropoff_from( pct_if("funded_date IS NOT NULL") ) }}                        as created_to_funded_drop_off_pct,
+
+  {{ pct_transition("transferred_date IS NOT NULL", "funded_date IS NOT NULL") }} as funded_to_completed_pct,
+  {{ dropoff_from( pct_transition("transferred_date IS NOT NULL", "funded_date IS NOT NULL") ) }} as funded_to_completed_drop_off_pct,
+
+  {{ pct_if("transferred_date IS NOT NULL") }}                                   as created_to_completed_pct,
+  {{ dropoff_from( pct_if("transferred_date IS NOT NULL") ) }}                   as created_to_completed_drop_off_pct
+
+from {{ ref('wise_funnel_events_metrics') }}
+group by experience, platform, region
+order by experience, platform, region
