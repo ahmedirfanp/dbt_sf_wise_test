@@ -67,7 +67,68 @@ It is designed to:
    CSV_FILE_NAME=your_file.csv
    ```
 
-4. **Load data (optional):**
+4. ## Database Setup Commands
+
+    Below are the key commands (DDL, DML, and Snowflake stage operations) used in this project.
+    
+    ### 1. Create Stage
+
+    Used to create an internal Snowflake stage for uploading raw CSV files.
+
+    ```sql
+    CREATE STAGE wise_db.wise_schema.funnel_stage;
+    ```
+
+    **Purpose:**  
+    Stores the raw CSV file before it is loaded into the staging table.
+
+    ---
+
+    ### 2. Remove All Files from Stage
+
+    Removes all files from the internal stage.
+
+    ```sql
+    REMOVE @wise_db.wise_schema.funnel_stage;
+    ```
+
+    **Purpose:**  
+    Clears the stage to ensure old files do not interfere with new loads.
+
+    ---
+
+    ### 3. Truncate Staging Table
+
+    Clears all data from the staging table while keeping its structure intact.
+
+    ```sql
+    TRUNCATE TABLE wise_db.wise_schema.stg_wise_funnel_events;
+    ```
+
+    **Purpose:**  
+    Ensures the staging table is empty before reloading fresh data.
+
+    ---
+
+    ### 4. Create Staging Table
+
+    Defines the schema for the raw data loaded from the CSV file.
+
+    ```sql
+    CREATE TABLE wise_db.wise_schema.stg_wise_funnel_events (
+        event_name STRING,
+        dt STRING,
+        user_id STRING,
+        region STRING,
+        platform STRING,
+        experience STRING
+    );
+    ```
+
+    **Purpose:**  
+    Defines the structure for loading and staging raw funnel event
+
+5. **Load data (optional):**
    Use the provided script to upload a CSV to Snowflake:
    ```sh
    python scripts/load_csv_stage.py
