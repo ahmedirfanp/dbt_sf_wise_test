@@ -28,7 +28,7 @@ It is designed to:
   - `curated/`: Curated models for funnel events ([wise_funnel_events_final.sql](models/curated/wise_funnel_events_final.sql), etc.)
   - `metrics/`: Metrics and reporting views ([metrics_vw.sql](models/metrics/metrics_vw.sql))
 - `macros/`: Custom dbt macros for metrics ([metrics_utils.sql](macros/metrics_utils.sql))
-- `scripts/`: Helper scripts for data loading ([load_csv_stage.py](scripts/load_csv_stage.py)) Files Can placed in source_files (Local Dir in .env) folder
+- `scripts/`: Helper scripts for data loading ([load_csv_stage.py](scripts/load_csv_stage.py))
 - `analyses/`, `seeds/`, `snapshots/`, `tests/`: Standard dbt directories
 
 ## Getting Started
