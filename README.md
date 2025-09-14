@@ -29,6 +29,7 @@ It is designed to:
   - `metrics/`: Metrics and reporting views ([metrics_vw.sql](models/metrics/metrics_vw.sql))
 - `macros/`: Custom dbt macros for metrics ([metrics_utils.sql](macros/metrics_utils.sql))
 - `scripts/`: Helper scripts for data loading ([load_csv_stage.py](scripts/load_csv_stage.py))
+- `source_files/`: **Place your raw CSV source files here before loading to Snowflake.**
 - `analyses/`, `seeds/`, `snapshots/`, `tests/`: Standard dbt directories
 
 ## Getting Started
