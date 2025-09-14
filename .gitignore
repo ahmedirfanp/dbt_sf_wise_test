@@ -3,5 +3,5 @@
 target/
 dbt_packages/
 logs/
-source_files
+source_files/
 .env
